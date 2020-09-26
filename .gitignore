@@ -152,5 +152,6 @@ fabric.properties
 
 # Local resources (for the files that the bot is sending)
 .resources/*
+.resources/**
 # Exclude the folder itself
-!.resources/.gitkeep
+# !.resources/.gitkeep
