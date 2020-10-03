@@ -26,13 +26,13 @@ def parse_args():
 
 
 def load_extensions(bot: Bot):
-    bot.load_extension("cogs.error_handler")
-    bot.load_extension("cogs.greetings")
+    bot.load_extension("bot.cogs.error_handler")
+    bot.load_extension("bot.cogs.greetings")
 
 
 def main():
     args = parse_args()
-    bot = Bot(command_prefix=args.command_prefix)
+    bot = Bot(command_prefix=args.command_prefix, guid=args.guid)
     load_extensions(bot)
     print("Starting bot...")
     print(f'The bot token is:{args.token}')

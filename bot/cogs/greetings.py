@@ -4,20 +4,36 @@ from discord.ext import commands
 from discord.ext.commands import Cog
 import discord
 
-from cogs.error_handler import ErrorHandler
+from bot.cogs.error_handler import ErrorHandler
 from pathlib import Path
+from bot.config import LoggerConfig
+import logging
 
 
 class Greetings(Cog):
     def __init__(self, bot):
+        self.logger = logging.getLogger(__name__)
+        self.init_logger()
         self.bot = bot
         self._last_member = None
         self.resources_path = Greetings.get_resources_path()
 
+    def init_logger(self):
+        # Create handlers
+        c_handler = logging.StreamHandler()
+        c_handler.setLevel(LoggerConfig.level)
+
+        # Create formatters and add it to handlers
+        c_format = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
+        c_handler.setFormatter(c_format)
+
+        # Add handlers to the logger
+        self.logger.addHandler(c_handler)
+
     @staticmethod
     def get_resources_path():
-        path = Path(__file__).parent.parent
-        rel_path = "resources"
+        path = Path(__file__).parent.parent.parent
+        rel_path = r"resources"
         return Path.joinpath(path, rel_path)
 
     @Cog.listener()
@@ -25,6 +41,7 @@ class Greetings(Cog):
         channel = member.guild.system_channel
         if channel is not None:
             await channel.send(f'Welcome {member.display_name}')
+            self.logger.info(f'{member.display_name} joined the channel')
 
     @commands.command()
     async def hello(self, ctx, *, member: discord.member.Member = None):
@@ -45,6 +62,11 @@ class Greetings(Cog):
         random_tedi_photo_number = random.randint(0, 6)
         tedi_photo_path = Path.joinpath(self.resources_path, rf"tedi_0{random_tedi_photo_number}.jpeg")
         await self.send_photo(ctx, tedi_photo_path, "tedi")
+
+    @commands.command()
+    async def idan(self, ctx):
+        idan_photo_path = Path.joinpath(self.resources_path, rf"idan.png")
+        await self.send_photo(ctx, idan_photo_path, "idan")
 
     @commands.command()
     async def family(self, ctx):
