@@ -1,13 +1,14 @@
 import random
+import logging
+import discord
 
 from discord.ext import commands
 from discord.ext.commands import Cog
-import discord
 
 from bot.cogs.error_handler import ErrorHandler
 from pathlib import Path
 from bot.config import LoggerConfig
-import logging
+from bot.discord_helper_functions import send_photo
 
 
 class Greetings(Cog):
@@ -61,38 +62,32 @@ class Greetings(Cog):
     async def tedi(self, ctx):
         random_tedi_photo_number = random.randint(0, 6)
         tedi_photo_path = Path.joinpath(self.resources_path, rf"tedi_0{random_tedi_photo_number}.jpeg")
-        await self.send_photo(ctx, tedi_photo_path, "tedi")
+        await send_photo(ctx, tedi_photo_path, "tedi")
 
     @commands.command()
     async def idan(self, ctx):
         idan_photo_path = Path.joinpath(self.resources_path, rf"idan.png")
-        await self.send_photo(ctx, idan_photo_path, "idan")
+        await send_photo(ctx, idan_photo_path, "idan")
 
     @commands.command()
     async def family(self, ctx):
         family_photo_path = Path.joinpath(self.resources_path, rf"family.jpeg")
-        await self.send_photo(ctx, family_photo_path, "family")
+        await send_photo(ctx, family_photo_path, "family")
 
     @commands.command()
     async def vatil(self, ctx):
         vatil_photo_path = Path.joinpath(self.resources_path, rf"vatil.png")
-        await self.send_photo(ctx, vatil_photo_path, "vatil")
+        await send_photo(ctx, vatil_photo_path, "vatil")
 
     @commands.command()
     async def rebar(self, ctx):
-        rebar_photo_path = Path.joinpath(self.resources_path, rf"rebar.jpeg")
-        await self.send_photo(ctx, rebar_photo_path, "rebar")
+        rebar_photo_path = Path.joinpath(self.resources_path, rf"rear.jpeg")
+        await send_photo(ctx, rebar_photo_path, "rebar")
 
     @commands.command()
     async def spam(self, ctx, member: discord.member.Member, number_of_messages: int):
         for message_counter in range(number_of_messages):
             await member.send(f"SPAM NUMBER #{message_counter}")
-
-    @staticmethod
-    async def send_photo(ctx, photo_path, file_name):
-        with open(photo_path, "rb") as file:
-            photo = discord.file.File(file, f"{file_name}.jpg")
-            await ctx.send(file=photo)
 
 
 def setup(bot):
